@@ -1,20 +1,55 @@
+<!--- SPDX-License-Identifier: Apache-2.0 --->
+
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP/sam-lib)](https://api.reuse.software/info/github.com/SAP/sam-lib)
 
-# sam-lib
+# The SAM Fortran library
 
 ## About this project
 
-The SAM Fortran library
+The SAM library is a collection of FORTRAN-77 subroutines for handling different
+tasks in Finite Element Method solvers, such as the assembly of element matrices
+into their global counterparts, solving global linear systems of equations,
+solving eigenvalue problems, and some other lower-level matrix utilities, etc.
+
+It was established by
+[Kolbein Bell](https://app.cristin.no/results/show.jsf?id=328216) during the
+1980s and 90s, and has been used in several FE program packages since then.
+
+It is now made available under the
+[Apache-2.0](https://spdx.org/licenses/Apache-2.0.html) license,
+such that programs like FEDEM can still use it in their solvers.
 
 ## Requirements and Setup
 
-*Insert a short description what is required to get your project running...*
+The general compiler setup is performed using the cmake-configuration files of
+the [cmake-modules](https://github.com/SAP/cmake-modules) repository,
+which is consumed as a submodule by this repository.
 
-## Support, Feedback, Contributing
+The SAM library also uses a few [BLAS](https://www.netlib.org/blas/) subroutines,
+and the dependency to that third-party module is handled by the `CMakeLists.txt`
+files through the find-rules provided by the cmake installation.
+
+On Linux, the SAM library can be compiled and installed using, e.g.,
+
+    mkdir Release; cd Release
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKEINSTALL_PREFIX=$HOME
+    make install
+
+This will build the two libraries in Release mode and install them
+in the `$HOME/lib` folder.
+
+Notice that by default the subroutines for the sparse matrix equation solver (in
+the [src/SPR](src/SPR) folder) are compiled using 64-bit integer representation,
+for handling of larger system matrices. This can be switched off by adding the
+command-line option `-DBUILD_SPR_INTEGER8=OFF` to the cmake command above.
+It will then use the standard 32-bit integer variables instead.
+
+## Contributing
 
 This project is open to feature requests/suggestions, bug reports etc. via [GitHub issues](https://github.com/SAP/sam-lib/issues). Contribution and feedback are encouraged and always welcome. For more information about how to contribute, the project structure, as well as additional contribution information, see our [Contribution Guidelines](CONTRIBUTING.md).
 
 ## Security / Disclosure
+
 If you find any bug that may be a security problem, please follow our instructions at [in our security policy](https://github.com/SAP/sam-lib/security/policy) on how to report it. Please do not create GitHub issues for security-related doubts or problems.
 
 ## Code of Conduct
