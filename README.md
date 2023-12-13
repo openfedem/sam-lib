@@ -1,4 +1,8 @@
-<!--- SPDX-License-Identifier: Apache-2.0 --->
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+--->
 
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP/sam-lib)](https://api.reuse.software/info/github.com/SAP/sam-lib)
 

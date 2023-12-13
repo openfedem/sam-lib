@@ -1,3 +1,5 @@
+C     SPDX-FileCopyrightText: 2023 SAP SE
+C
 C     SPDX-License-Identifier: Apache-2.0
 C
       integer, parameter :: i4 = selected_int_kind(9)  ! 4-byte integer

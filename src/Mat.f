@@ -1,3 +1,5 @@
+C     SPDX-FileCopyrightText: 2023 SAP SE
+C
 C     SPDX-License-Identifier: Apache-2.0
 C
       SUBROUTINE INSUB (B,S,MB,NB,MS,NS,I,J,IFLAG)
