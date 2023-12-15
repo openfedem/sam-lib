@@ -36,5 +36,7 @@ file ( GLOB F77_SOURCE_FILES *.f )
 add_library ( ${LIB_ID} ${F77_SOURCE_FILES} )
 target_link_libraries ( ${LIB_ID} SAM )
 if ( "${PACKAGE_ID}" STREQUAL "SAM" )
-  do_install ( ${LIB_ID} "${CMAKE_INSTALL_PREFIX}" )
+  install ( TARGETS ${LIB_ID}
+            LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
+            ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" )
 endif ( "${PACKAGE_ID}" STREQUAL "SAM" )
