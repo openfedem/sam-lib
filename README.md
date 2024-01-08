@@ -32,11 +32,15 @@ which is consumed as a submodule by this repository.
 The SAM library also uses a few [BLAS](https://www.netlib.org/blas/) subroutines,
 and the dependency to that third-party module is handled by the `CMakeLists.txt`
 files through the find-rules provided by the cmake installation.
+On Linux, the BLAS library can be installed from the package manager,
+e.g., on Ubuntu:
 
-On Linux, the SAM library can be compiled and installed using, e.g.,
+    sudo apt install libblas-dev
+
+The SAM library can then be built and installed using, e.g.,
 
     mkdir Release; cd Release
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKEINSTALL_PREFIX=$HOME
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME
     make install
 
 This will build the two libraries in Release mode and install them
