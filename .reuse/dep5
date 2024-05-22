@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: sam-lib
-Upstream-Contact: ospo@sap.com
-Source: https://github.com/SAP/sam-lib
+Upstream-Contact: kmo@openfedem.org
+Source: https://github.com/openfedem/sam-lib
 
 Files: src/*
 Copyright: 2023 SAP SE or an SAP affiliate company and sam-lib contributors
