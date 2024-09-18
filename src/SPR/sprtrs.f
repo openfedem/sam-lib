@@ -515,7 +515,7 @@ C     ---------------
       MSPAR(13) = MAXSUP
       MSPAR(14) = MAXFRT
       MSPAR(15) = NOFSUB
-      MSPAR(16) = NZEROL
+      MSPAR(16) = int(NZEROL)
       MSPAR(17) = NZSTCK
       MSPAR(18) = DPSTCK
       MSPAR(19) = NELACT
