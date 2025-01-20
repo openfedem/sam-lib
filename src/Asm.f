@@ -488,10 +488,11 @@ C     SYSTEM VECTOR (SV) IN WHICH THE ELEMENTS ARE ARRANGED IN NODAL
 C     POINT ORDER  -  THE NUMBER OF ELEMENT  D O F S  (NEDOF) IS ALSO
 C     DETERMINED
 C
-C     ROUTINES CALLED/REFERENCED :  NONE
+C     ROUTINES CALLED/REFERENCED :  ABS       (FORTRAN LIBRARY)
 C
 C     PROGRAMMED BY :   KOLBEIN BELL
 C     DATE/VERSION  :   84-03-29 / 1.0
+C                       24-09-13 / 1.1 K.M.Okstad (negative node numbs.)
 C
 C **********************************************************************
 C     CONDITIONALS  :   S - SINGLE PRECISION
@@ -509,7 +510,7 @@ C ----------------------------------------------------------------------
       IS    = MPMNPC(IEL)
       IE    = MPMNPC(IEL+1) - 1
       DO 100 I=IS,IE
-         INOD = MMNPC(I)
+         INOD = abs(MMNPC(I))
          JS   = MADOF(INOD)
          JE   = MADOF(INOD+1) - 1
          DO 50 J=JS,JE
@@ -534,6 +535,7 @@ C     'SKYLINE' FORM, AND THE PARTIAL FACTORIZATION HAS BEEN PERFORMED
 C     BY  S A M  ROUTINE -SKYSOL-  (WITH  NEQ1 = abs(NEQ)-NEQ2)
 C
 C     ROUTINES CALLED/REFERENCED :  ASMERR    (SAM-7)
+C                                   ABS       (FORTRAN LIBRARY)
 C
 C     PROGRAMMED BY :   KOLBEIN BELL
 C     DATE/VERSION  :   84-03-29 / 1.0
@@ -1304,10 +1306,11 @@ C     NEDOF (NO. OF ELEMENT  D O F S), NESLV (NO. OF ELEMENT SLAVE
 C     D O F S) AND NEPRD (NO. OF ELEMENT PRESCRIBED  D O F S) FOR AN
 C     ELEMENT WHOSE  MNPC(NENOD)  IS INPUT
 C
-C     ROUTINES CALLED/REFERENCED :  NONE
+C     ROUTINES CALLED/REFERENCED :  ABS              (FORTRAN LIBRARY)
 C
 C     PROGRAMMED BY :   KOLBEIN BELL
 C     DATE/VERSION  :   84-03-25 / 1.0
+C                       24-09-13 / 1.1 K.M.Okstad (negative node numbs.)
 C
 C **********************************************************************
 C
@@ -1316,18 +1319,20 @@ C
       INTEGER           NEDOF,NENOD,NEPRD,NESLV
       INTEGER           MADOF(*),MEEN(*),MEQN(*),MNPC(NENOD),MPMCEQ(*)
 C
-      INTEGER           I,ICEQ,IDOF,IE,INOD,IS,NMST,NN
+      INTEGER           I,ICEQ,IE,INOD,IS,NMST,NN
 C ----------------------------------------------------------------------
-      IDOF  = 0
+      NEDOF = 0
       NESLV = 0
       NEPRD = 0
       DO 100 INOD=1,NENOD
          NN = MNPC(INOD)
-         IS = MADOF(NN)
-         IE = MADOF(NN+1) - 1
+         IS = MADOF(abs(NN))
+         IE = MADOF(abs(NN)+1) - 1
          DO 50 I=IS,IE
-            IDOF       = IDOF+1
-            MEEN(IDOF) = MEQN(I)
+            NEDOF       = NEDOF+1
+            MEEN(NEDOF) = 0
+            IF (NN.LT.0)       GO TO 50
+            MEEN(NEDOF) = MEQN(I)
             IF (MEQN(I).GE.0)  GO TO 50
 C
             ICEQ =-MEQN(I)
@@ -1338,8 +1343,6 @@ C                                               ** DEPENDENT  D O F
             IF (NMST.GT.0)     NESLV = NESLV+1
    50    CONTINUE
   100 CONTINUE
-C
-      NEDOF = IDOF
 C
       RETURN
       END
