@@ -21,7 +21,7 @@ C
 C --- To add a scalar to the diagonal of the factor matrix stored in SM.
 C
 C     Created   : May. 25, 2009 (kmo)
-C     Revisions : Mnt. xx, 200x (kmo)
+C     Revisions : May. 07, 2025 (kmo)
 C
 C     MSPAR - INTEGER(*)
 C      Entry : As output from SPRSMB.
@@ -39,7 +39,7 @@ C     LPU - INTEGER
 C      Entry : Output unit.
 C      Exit  : Not changed.
 C     IERR - INTEGER
-C      Entry : Not defined
+C      Entry : If positive, add SIGMA to equation IERR only
 C      Exit  : Is set to zero if a successful call, and to -1 otherwise
 C
 C     Working arrays
@@ -84,7 +84,6 @@ C     -------------------
          RETURN
       ENDIF
 
-      IERR   = 0
       NSUPER = MSPAR(11)
       NZEROL = MSPAR(16)
 
@@ -100,19 +99,20 @@ C     ---------------------------------------------------
 C     ADD SIGMA TO THE DIAGONAL OF L BY A CALL TO SPRDA1.
 C     ---------------------------------------------------
       CALL SPRDA1 ( NSUPER, NZEROL, MTREES(XSUPER), MTREES(XLINDX),
-     $              MSIFA(XLNZ), SM(LNZ), SIGMA )
+     $              MSIFA(XLNZ), SM(LNZ), SIGMA, IERR )
 
+      IERR = 0
       RETURN
       END
 
 
-      SUBROUTINE SPRDA1 (NSUPER,NZEROL,XSUPER,XLINDX,XLNZ,LNZ,SIGMA)
+      SUBROUTINE SPRDA1 (NSUPER,NZEROL,XSUPER,XLINDX,XLNZ,LNZ,SIGMA,IEQ)
 
 C     ------------------------------------------------------------------
 
       IMPLICIT NONE
 
-      INTEGER           NSUPER,NZEROL
+      INTEGER           NSUPER,NZEROL,IEQ
       INTEGER           XSUPER(NSUPER+1),XLINDX(NSUPER+1),XLNZ(NSUPER+1)
       DOUBLE PRECISION  LNZ(NZEROL),SIGMA
 
@@ -127,7 +127,7 @@ C --- TO ADD A SCALAR TO THE DIAGONAL OF THE FACTOR MATRIX STORED IN LNZ.
 C
 C
 C     CREATED   : MAY. 25, 2009 (KMO)
-C     REVISIONS : MNT. XX, 200X (KMO)
+C     REVISIONS : MAY. 07, 2025 (KMO)
 C
 C
 C     ON ENTRY
@@ -148,7 +148,10 @@ C     LNZ    : DOUBLE PRECISION(NZEROL)
 C              THE CHOLESKY SUPERNODE SUBMATRICES OF L STORED CON-
 C              SEQUTIVELY ON DENSE FORMAT INCLUDED THE DIAGONAL.
 C     SIGMA  : DOUBLE PRECISION
-C              SCALAR VALUE TO ADD TO ALL DIAGONAL TERMS OF L
+C              SCALAR VALUE TO ADD TO ALL DIAGONAL TERMS OF L.
+C     IEQ    : INTEGER
+C              IF POSITIVE, ADD SIGMA TO EQUATION IEQ ONLY.
+C              OTHERWISE, TO ALL EQUATIONS.
 C
 C     ON EXIT
 C     -------
@@ -180,7 +183,12 @@ C     ------------------------------------------------------------------
          CHDLEN = XLINDX(JS+1) - XLINDX(JS)
          IPJS = XLNZ(JS)
          DO 100 J = XSUPER(JS), XSUPER(JS+1)-1
-            LNZ(IPJS) = LNZ(IPJS) + SIGMA
+            IF (IEQ .LE. 0) THEN
+               LNZ(IPJS) = LNZ(IPJS) + SIGMA
+            ELSEIF (IEQ .EQ. J) THEN
+               LNZ(IPJS) = LNZ(IPJS) + SIGMA
+               RETURN
+            ENDIF
             IPJS = IPJS + CHDLEN
             CHDLEN = CHDLEN - 1
   100    CONTINUE
