@@ -521,6 +521,9 @@ C     ---------------
       MSPAR(19) = NELACT
       MSPAR(20) = LCOEFA
       MSPAR(25) = ELSIZE
+      IF ( MTUSED .LT. NTREES+1 ) THEN
+         MSPAR(36) = MTUSED - 1
+      ENDIF
 
 * --- New quantities to control superelement technique.
       IF ( NSPAR .GT. 50 ) THEN
