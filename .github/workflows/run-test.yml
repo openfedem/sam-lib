@@ -1,0 +1,47 @@
+# SPDX-FileCopyrightText: 2023 SAP SE
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# This file is part of FEDEM - https://openfedem.org
+
+name: Unit testing
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build and execute unit tests
+
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Silence some advice and hint
+        run: |
+          git config --global advice.detachedHead false
+          git config --global init.defaultBranch main
+
+      - name: Check out source repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Download the pFUnit-3 package
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: openfedem/fedem-foundation
+          fileName: 'pFUnit3_Ubuntu-22.04.tar.gz'
+          latest: true
+          extract: true
+
+      - name: Configure main build
+        run: >
+          PFUNIT=${{ github.workspace }}/pFUnit3
+          cmake -B ./build -DCMAKE_BUILD_TYPE=Release -DBUILD_SPR_INTEGER8=OFF
+
+      - name: Build binaries and execute tests
+        run: cmake --build ./build --target check

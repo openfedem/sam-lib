@@ -5,6 +5,7 @@
 --->
 
 [![REUSE status](https://api.reuse.software/badge/github.com/openfedem/sam-lib)](https://api.reuse.software/info/github.com/openfedem/sam-lib)
+[![Test status](https://github.com/openfedem/samm-lib/actions/workflows/run_test.yml/badge.svg)](https://github.com/openfedem/sam-lib/actions/workflows/run_test.yml)
 
 # The SAM Fortran library
 
